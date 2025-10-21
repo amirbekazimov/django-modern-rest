@@ -2,6 +2,8 @@ from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
+    Callable,
+    Iterable,
 )
 
 try:
@@ -56,6 +58,15 @@ class MsgspecEndpointOptimizer(BaseEndpointOptimizer):
         """Create models for return types for validation."""
 
 
+class ConvertKwargs(TypedDict, total=False):
+    """Possible keyword arguments for msgspec.convert."""
+    str_keys: bool
+    strict: bool
+    dec_hook: Callable[[Any, Any], Any]
+    builtin_types: Iterable[type]
+    type: Any
+
+
 class MsgspecSerializer(BaseSerializer):
     """
     Serialize and deserialize objects using msgspec.
@@ -78,7 +89,7 @@ class MsgspecSerializer(BaseSerializer):
 
     # Custom API:
     from_json_strict: ClassVar[bool] = True
-    convert_kwargs: ClassVar[dict[str, Any]] = {'str_keys': True}
+    convert_kwargs: ClassVar[ConvertKwargs] = {'str_keys': True}
 
     @override
     @classmethod
